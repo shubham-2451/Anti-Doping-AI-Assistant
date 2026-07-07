@@ -36,7 +36,3 @@ Thumbs.db
 # =========================
 *.log
 
-# Test Images
-*.jpg
-*.jpeg
-*.png
