@@ -11,11 +11,8 @@ from compliance_engine import check_drugs
 from modules.nlp_module import find_multiple_drugs
 from modules.llm_handler import ask_llm
 from modules.llm_handler import extract_medicines_from_prescription
-from fastapi.security import OAuth2PasswordBearer
-from jose import jwt, JWTError
-from fastapi import Depends, HTTPException
-from auth_routes import get_current_user
-import os
+
+
 
 # =============================
 # APP INIT
@@ -24,7 +21,10 @@ import os
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # allow all origins (for testing)
+    allow_origins=["http://localhost:8080",
+        "http://127.0.0.1:8080",
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -36,12 +36,6 @@ app.include_router(auth_router)
 # =============================
 # JWT CONFIG (IMPORTANT)
 # =============================
-
-SECRET_KEY = "your_secret_key_here"  # must match auth_routes
-ALGORITHM = "HS256"
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
-
 
 
 # =============================
@@ -111,7 +105,10 @@ def chat_with_ai(query: str):
 # =============================
 
 @app.post("/check-image")
-async def check_image(file: UploadFile = File(...)):
+async def check_image(
+    file: UploadFile = File(...),
+    current_user=Depends(get_current_user)
+):
 
     file_location = f"temp_{file.filename}"
 

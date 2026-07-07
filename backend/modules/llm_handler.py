@@ -1,13 +1,18 @@
-import ollama
+import os
+from dotenv import load_dotenv
+import google.generativeai as genai
+
+load_dotenv()
+
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+
+model = genai.GenerativeModel("gemini-2.5-flash")
+
 
 def ask_llm(user_query):
     try:
-        response = ollama.chat(
-            model="phi3:mini",
-            messages=[
-                {
-                    "role": "system",
-                    "content": """
+        response = model.generate_content(
+            f"""
 You are an Anti-Doping Compliance AI Assistant.
 
 Respond in STRICT structured format.
@@ -22,20 +27,17 @@ Explanation: <2-3 short lines only>
 Keep answers short.
 No extra paragraphs.
 No storytelling.
+
+User Query:
+{user_query}
 """
-                },
-                {
-                    "role": "user",
-                    "content": user_query
-                }
-            ]
         )
 
-        return response["message"]["content"]
+        return response.text
 
     except Exception as e:
         return f"LLM Error: {str(e)}"
-    
+
 
 def extract_medicines_from_prescription(text):
 
@@ -54,5 +56,4 @@ Prescription Text:
 {text}
 """
 
-    response = ask_llm(prompt)
-    return response.strip()
+    return ask_llm(prompt).strip()

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { API_URL } from "@/lib/api";
 import {
   FileText,
   Camera,
@@ -49,11 +50,11 @@ const CheckPrescription = () => {
   }
 
   try {
-    const response = await fetch("http://localhost:8000/check", {
+    const response = await fetch(`${API_URL}/check`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,   // ✅ THIS IS THE FIX
+        Authorization: `Bearer ${token}`,  
       },
       body: JSON.stringify({ text: textInput }),
     });
@@ -61,7 +62,6 @@ const CheckPrescription = () => {
     if (!response.ok) throw new Error("Backend error");
 
     const data = await response.json();
-    console.log("Backend response:", data);
 
     setAiExplanation(data.ai_explanation || "");
 
@@ -93,16 +93,23 @@ const CheckPrescription = () => {
       const formData = new FormData();
       formData.append("file", file);
 
-      const response = await fetch("http://localhost:8000/check-image", {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        toast.error("Please login again");
+        return;
+      }
+      const response = await fetch(`${API_URL}/check-image`, {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         body: formData,
       });
 
       if (!response.ok) throw new Error("Backend error");
 
       const data = await response.json();
-      console.log("OCR response:", data);
-
+  
       setAiExplanation(data.ai_explanation || "");
 
       if (Array.isArray(data.results) && data.results.length > 0) {

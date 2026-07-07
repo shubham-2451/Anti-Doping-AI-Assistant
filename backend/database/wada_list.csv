@@ -1,4 +1,6 @@
 substance,category,banned_status,sport_specific
+paracetamol,Analgesic,allowed,all
+aspirin,NSAID,allowed,all
 stanozolol,anabolic agent,prohibited,all
 propranolol,beta blocker,prohibited,shooting
 salbutamol,beta-2 agonist,restricted,all

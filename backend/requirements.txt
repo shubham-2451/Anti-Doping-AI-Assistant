@@ -1,4 +1,12 @@
-streamlit
+fastapi
+uvicorn
+python-jose[cryptography]
+python-multipart
+
+sqlalchemy
+passlib[bcrypt]
+bcrypt
+
 pandas
 rapidfuzz
 spacy
@@ -6,3 +14,7 @@ easyocr
 openai-whisper
 speechrecognition
 pydub
+
+python-dotenv
+google-generativeai
+requests

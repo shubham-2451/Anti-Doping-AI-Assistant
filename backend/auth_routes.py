@@ -8,15 +8,20 @@ from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from fastapi.security import OAuth2PasswordBearer
 
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 
 router = APIRouter()
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-SECRET_KEY = "supersecretkey"
+SECRET_KEY = os.getenv("JWT_SECRET")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
+print("JWT Secret:", SECRET_KEY)
 
 class RegisterRequest(BaseModel):
     name: str
@@ -62,12 +67,18 @@ def register_user(user: RegisterRequest, db: Session = Depends(get_db)):
 
     hashed_password = hash_password(user.password)
 
+    # Check duplicate phone only if provided
+    if user.phone:
+        existing_phone = db.query(User).filter(User.phone == user.phone).first()
+        if existing_phone:
+            raise HTTPException(status_code=400, detail="Phone number already registered")
+
     new_user = User(
         name=user.name,
         email=user.email,
-        phone=user.phone,
+        phone=user.phone if user.phone else None,
         sport=user.sport,
-        password=hashed_password
+        password=hashed_password,
     )
 
     db.add(new_user)

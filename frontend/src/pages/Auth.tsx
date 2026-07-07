@@ -5,6 +5,7 @@ import { Shield, Mail, Phone, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { API_URL } from "@/lib/api";
 
 const sports = [
   "Athletics (Track & Field)", "Swimming", "Cycling", "Weightlifting", "Boxing",
@@ -27,12 +28,12 @@ const Auth = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
-  console.log("SUBMIT WORKING");
+  
 
   try {
     const endpoint = isLogin
-  ? "http://localhost:8000/login"
-  : "http://localhost:8000/register";
+  ? `${API_URL}/login`
+  : `${API_URL}/register`;
 
     const bodyData = isLogin
       ? {
@@ -56,7 +57,7 @@ const Auth = () => {
     });
 
     const data = await response.json();
-    console.log("LOGIN RESPONSE:", data);
+    
 
     if (!response.ok) {
       toast.error(data.detail || "Something went wrong");
@@ -64,13 +65,10 @@ const Auth = () => {
     }
 
     if (isLogin) {
-  console.log("LOGIN SUCCESS BLOCK ENTERED");
+  
 
   localStorage.setItem("token", data.access_token);
   window.dispatchEvent(new Event("storage"));
-
-  console.log("TOKEN SAVED:", localStorage.getItem("token"));
-  console.log("Navigating to dashboard...");
   
   navigate("/dashboard");
 } else {
@@ -79,8 +77,8 @@ const Auth = () => {
     }
 
   } catch (error) {
-    toast.error("Server error. Make sure backend is running.");
-  }
+  console.error("FETCH ERROR:", error);
+}
 };
 
   return (
