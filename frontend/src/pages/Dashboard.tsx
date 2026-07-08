@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
+import { API_URL } from "@/lib/api";
 
 interface Athlete {
   name: string;
@@ -36,7 +37,7 @@ const Dashboard = () => {
     const fetchData = async () => {
       try {
         // Fetch user info
-        const userRes = await fetch("http://localhost:8000/me", {
+        const userRes = await fetch(`${API_URL}/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -50,7 +51,7 @@ const Dashboard = () => {
         setAthlete(userData);
 
         // Fetch search history
-        const historyRes = await fetch("http://localhost:8000/history", {
+        const historyRes = await fetch(`${API_URL}/history`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
