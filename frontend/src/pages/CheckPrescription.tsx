@@ -74,7 +74,7 @@ const CheckPrescription = () => {
             : item.status?.toLowerCase() === "safe"
             ? "safe"
             : "caution",
-        details: item.details || "No details provided.",
+        details: item.details ,
       }));
       setResults(formatted);
     } else {
@@ -121,7 +121,7 @@ const CheckPrescription = () => {
               : item.status?.toLowerCase() === "safe"
               ? "safe"
               : "caution",
-          details: item.details || "No details provided.",
+          details: item.details ,
         }));
         setResults(formatted);
       } else {
