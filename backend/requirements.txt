@@ -10,6 +10,12 @@ bcrypt==4.0.1
 pandas
 rapidfuzz
 spacy
+
+# CPU-only PyTorch for Railway (no GPU/CUDA)
+torch==2.12.1
+torchvision==0.27.1
+--extra-index-url https://download.pytorch.org/whl/cpu
+
 easyocr
 openai-whisper
 speechrecognition
